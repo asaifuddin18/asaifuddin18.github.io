@@ -1,4 +1,4 @@
-ranking,code,county_name,gdp,
+idx,code,ranking,county_name,gdp,
 0,USA,1,United States,17419000,
 1,CHN,2,China,10360105,
 2,JPN,3,Japan,4601461,
