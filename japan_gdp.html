@@ -55,8 +55,8 @@
             width = 1700 - margin.left - margin.right,
             height = 850 - margin.top - margin.bottom;
         
-        var max_ = 9
-        var min_ = -4
+        var max_ = 13
+        var min_ = -6
         // append the svg object to the body of the page
         var svg = d3.select("#graph_div")
           .append("svg")
@@ -71,7 +71,7 @@
         d3.csv("https://raw.githubusercontent.com/asaifuddin18/asaifuddin18.github.io/main/gdp_growth.csv",
           // When reading the csv, I must format variables:
           function(d){
-            return { date : d.year, value : d.United_States }
+            return { date : d.year, value : d.Japan }
           },
           // Now I can use this dataset:
           function(data) {
@@ -94,7 +94,7 @@
               .domain( [min_, max_])
               .range([ height, 0 ]);
             svg.append("g")
-            .call(d3.axisLeft(y).ticks(max_-min_));
+              .call(d3.axisLeft(y).ticks(max_-min_));
 
               svg.append("text")
     .attr("text-anchor", "end")
@@ -110,7 +110,7 @@
     .attr("y", margin.top+30)
     .attr("x", margin.left + (width/2))
     .attr("font-size", "25px")
-    .text("United States GDP Growth 1961-2021 (%)")
+    .text("Japan GDP Growth 1961-2021 (%)")
             
 
               

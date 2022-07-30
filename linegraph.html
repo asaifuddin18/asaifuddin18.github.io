@@ -35,12 +35,14 @@
         </style>
     </head>
     <body>
-        <div class="center_div">
-            <button class="button" onclick = "window.location.href='index.html'">First Page</button>
-            <button class="button" onclick = "window.location.href='linegraph.html'">Second Page</button>
-            <button class="button">Third Page</button>
-            <button class="button">Fourth Page</button>
-        </div>
+      <div class="center_div">
+        <button class="button" onclick = "window.location.href='index.html'">First Page</button>
+        <button class="button" onclick = "window.location.href='linegraph.html'">Second Page</button>
+        <button class="button" onclick = "window.location.href='gdp_growth.html'">US GDP Growth</button>
+        <button class="button" onclick = "window.location.href='china_gdp.html'">China GDP Growth</button>
+        <button class="button" onclick = "window.location.href='eu_gdp.html'">EU GDP Growth</button>
+        <button class="button" onclick = "window.location.href='japan_gdp.html'">Japan GDP Growth</button>
+    </div>
         <div id="graph_div" class="center_div">
         </div>
     </body>
@@ -96,6 +98,10 @@ d3.csv("https://raw.githubusercontent.com/asaifuddin18/asaifuddin18.github.io/ma
     .domain(res)
     .range(colors)
 
+
+  
+
+  
   // Draw the line
   svg.selectAll(".line")
       .data(sumstat)
@@ -110,6 +116,8 @@ d3.csv("https://raw.githubusercontent.com/asaifuddin18/asaifuddin18.github.io/ma
             .y(function(d) { return y(+d.gdp); })
             (d.values)
         })
+
+    
 
 })
         var legend_x = 1050
@@ -152,7 +160,7 @@ d3.csv("https://raw.githubusercontent.com/asaifuddin18/asaifuddin18.github.io/ma
   },
   {
     note: {
-      label: "China started to massive increase in GDP in the mid 90's",
+      label: "China started to massively increase in GDP in the mid 90's",
       title: "China",
       align: "left"
     },
