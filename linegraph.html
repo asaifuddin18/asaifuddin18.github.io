@@ -70,7 +70,7 @@ var svg = d3.select("#graph_div")
 
 //Read the data
 d3.csv("https://raw.githubusercontent.com/asaifuddin18/asaifuddin18.github.io/main/data.csv", function(data) {
-
+  
   // group the data: I want to draw one line per group
   var sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
     .key(function(d) { return d.country;})
@@ -138,6 +138,25 @@ d3.csv("https://raw.githubusercontent.com/asaifuddin18/asaifuddin18.github.io/ma
             .y(function(d) { return y(+d.gdp); })
             (d.values)
         })
+        svg
+      .selectAll("myLegend")
+      .data(sumstat)
+      .enter()
+        .append('g')
+        .append("text")
+          .attr('x', function(d,i){ return 30 + i*60})
+          .attr('y', 30)
+          .text(function(d) { return d.key; })
+          .style("fill", function(d){ return myColor(d.key) })
+          .style("font-size", 15)
+        .on("click", function(d){
+          // is the element currently visible ?
+          currentOpacity = d3.selectAll("." + d.key).style("opacity")
+          // Change the opacity: from 0 to 1 or from 1 to 0
+          d3.selectAll("." + d.key).transition().style("opacity", currentOpacity == 1 ? 0:1)
+
+        })
+        
 
     
 
