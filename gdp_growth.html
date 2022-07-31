@@ -200,6 +200,60 @@
           .duration(1000)
                 .attr("cx", function(d) { return x(d.date) } )
                 .attr("cy", function(d) { return y(d.value) } )
+
+
+                width = +svg.attr("width"),
+  height = +svg.attr("height");
+  const annotations = [
+  {
+    note: {
+      label: "US GDP fell due to a brief recession and from the aftermath of 9/11",
+      title: "Brief recession & 9/11",
+      align: "right"
+    },
+    x: 1025,
+    y: 510,
+    dy: 100,
+    dx: -50
+  },
+  {
+    note: {
+      label: "The US was hit extremely hard in the 2008 recession, especially in unemployment",
+      title: "2008 Recession",
+      align: "right"
+    },
+    x: 1232,
+    y: 730,
+    dy: -10,
+    dx: -30
+  },
+  {
+    note: {
+      label: "Due to the bad economy, incumbent president George H.W. Bush lost re-election to Bill Clinton",
+      title: "1992 Election",
+      align: "right"
+    },
+    x: 771,
+    y: 576,
+    dy: 50,
+    dx: -30
+  },
+  {
+    note: {
+      label: "The US experienced a brief recession due to lockdowns from the COVID-19 Pandemic",
+      title: "Covid-19 Recession",
+      align: "right"
+    },
+    x: 1516,
+    y: 780,
+    dy: -10,
+    dx: -80
+  }
+]
+const makeAnnotations = d3.annotation()
+  .annotations(annotations)
+svg.append("g")
+  .call(makeAnnotations)
         })
         </script>
 </html>

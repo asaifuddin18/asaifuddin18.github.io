@@ -51,9 +51,9 @@
     <script>
 
         // set the dimensions and margins of the graph
-        const margin = {top: 10, right: 200, bottom: 30, left: 100},
-            width = 1300 - margin.left - margin.right,
-            height = 800 - margin.top - margin.bottom;
+        const margin = {top: 10, right: 250, bottom: 50, left: 150},
+            width = 1700 - margin.left - margin.right,
+            height = 850 - margin.top - margin.bottom;
         
         // append the svg object to the body of the page
 var svg = d3.select("#graph_div")
@@ -84,12 +84,34 @@ d3.csv("https://raw.githubusercontent.com/asaifuddin18/asaifuddin18.github.io/ma
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(x).ticks(5));
 
+    svg.append("text")
+    .attr("text-anchor", "middle")
+    .attr("x", (width/2))
+    .attr("y", margin.top + height + 40)
+    .attr("font-size", "25px")
+    .text("Year");
+
   // Add Y axis
   var y = d3.scaleLinear()
     .domain([0, d3.max(data, function(d) { return +d.gdp; })])
     .range([ height, 0 ]);
   svg.append("g")
     .call(d3.axisLeft(y));
+
+    svg.append("text")
+    .attr("text-anchor", "end")
+    .attr("transform", "rotate(-90)")
+    .attr("y", -margin.left + 20)
+    .attr("x", -margin.top)
+    .attr("font-size", "25px")
+    .text("GDP Change (USD)")
+
+    svg.append("text")
+    .attr("text-anchor", "middle")
+    .attr("y", margin.top+30)
+    .attr("x", (width/2))
+    .attr("font-size", "25px")
+    .text("Top 10 countries GDP 1961-2021")
 
   // color palette
   var res = sumstat.map(function(d){ return d.key }) // list of group names
@@ -120,7 +142,7 @@ d3.csv("https://raw.githubusercontent.com/asaifuddin18/asaifuddin18.github.io/ma
     
 
 })
-        var legend_x = 1050
+        var legend_x = 1350
         var legend_text = legend_x + 20
         var colors = ["#000000", "#006400", "#ff0000", "#ffd700", "#00ff00", "#4169e1", "#e9967a", "#00ffff", "#0000ff", "#ff1493"]
         var countries = ["United States", "China", "European Union", "Japan", "India", "Brazil", "Canada", "Russia", "South Korea", "Australia"]
@@ -153,8 +175,8 @@ d3.csv("https://raw.githubusercontent.com/asaifuddin18/asaifuddin18.github.io/ma
       title: "European Union",
       align: "right"
     },
-    x: 785,
-    y: 220,
+    x: 1023,
+    y: 230,
     dy: -50,
     dx: -50
   },
@@ -164,20 +186,20 @@ d3.csv("https://raw.githubusercontent.com/asaifuddin18/asaifuddin18.github.io/ma
       title: "China",
       align: "left"
     },
-    x: 590,
-    y: 730,
+    x: 780,
+    y: 760,
     dy: -20,
     dx: -20
   },
   {
     note: {
-      label: "Japan stagnated around the mid 90's due to its limited resources",
+      label: "Japan stagnated around the mid 90's due to its limited resources & shrinking population",
       title: "Japan",
       align: "right"
     },
-    x: 575,
-    y: 577,
-    dy: -100,
+    x: 747,
+    y: 600,
+    dy: -120,
     dx: -100
   }
 ]

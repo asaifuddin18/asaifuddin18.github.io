@@ -200,6 +200,49 @@
           .duration(1000)
                 .attr("cx", function(d) { return x(d.date) } )
                 .attr("cy", function(d) { return y(d.value) } )
+
+
+        width = +svg.attr("width"),
+  height = +svg.attr("height");
+  const annotations = [
+  {
+    note: {
+      label: "The European Union was founded Nov. 1st 1993",
+      title: "EU Formation",
+      align: "right"
+    },
+    x: 822,
+    y: 588,
+    dy: 50,
+    dx: -50
+  },
+  {
+    note: {
+      label: "Each EU country was hit hard during the 2008 Recession",
+      title: "2008 Recession",
+      align: "right"
+    },
+    x: 1232,
+    y: 748,
+    dy: -20,
+    dx: -150
+  },
+  {
+    note: {
+      label: "The EU experienced a brief recession due to lockdowns from the COVID-19 Pandemic",
+      title: "Covid-19 Recession",
+      align: "right"
+    },
+    x: 1516,
+    y: 816,
+    dy: -10,
+    dx: -80
+  }
+]
+const makeAnnotations = d3.annotation()
+  .annotations(annotations)
+svg.append("g")
+  .call(makeAnnotations)
         })
         </script>
 </html>
