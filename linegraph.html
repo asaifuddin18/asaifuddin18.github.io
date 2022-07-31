@@ -48,183 +48,97 @@
     </body>
     <script src="https://d3js.org/d3.v4.js"></script>
     <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <script>
 
-        // set the dimensions and margins of the graph
-        const margin = {top: 10, right: 250, bottom: 50, left: 150},
-            width = 1700 - margin.left - margin.right,
-            height = 850 - margin.top - margin.bottom;
-        
-        // append the svg object to the body of the page
-var svg = d3.select("#graph_div")
-  .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .call(d3.zoom().on("zoom", function () {
-       svg.attr("transform", d3.event.transform)
-    }))
-
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
-
-//Read the data
-d3.csv("https://raw.githubusercontent.com/asaifuddin18/asaifuddin18.github.io/main/data.csv", function(data) {
-  
-  // group the data: I want to draw one line per group
-  var sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
-    .key(function(d) { return d.country;})
-    .entries(data);
-
-  // Add X axis --> it is a date format
-  var x = d3.scaleLinear()
-    .domain(d3.extent(data, function(d) { return d.year; }))
-    .range([ 0, width ]);
-  svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x).ticks(5));
-
-    svg.append("text")
-    .attr("text-anchor", "middle")
-    .attr("x", (width/2))
-    .attr("y", margin.top + height + 40)
-    .attr("font-size", "25px")
-    .text("Year");
-
-  // Add Y axis
-  var y = d3.scaleLinear()
-    .domain([0, d3.max(data, function(d) { return +d.gdp; })])
-    .range([ height, 0 ]);
-  svg.append("g")
-    .call(d3.axisLeft(y));
-
-    svg.append("text")
-    .attr("text-anchor", "end")
-    .attr("transform", "rotate(-90)")
-    .attr("y", -margin.left + 20)
-    .attr("x", -margin.top)
-    .attr("font-size", "25px")
-    .text("GDP Change (USD)")
-
-    svg.append("text")
-    .attr("text-anchor", "middle")
-    .attr("y", margin.top+30)
-    .attr("x", (width/2))
-    .attr("font-size", "25px")
-    .text("Top 10 countries GDP 1961-2021")
-
-  // color palette
-  var res = sumstat.map(function(d){ return d.key }) // list of group names
-  var colors = ["#000000", "#006400", "#ff0000", "#ffd700", "#00ff00", "#4169e1", "#e9967a", "#00ffff", "#0000ff", "#ff1493"]
-  var color = d3.scaleOrdinal()
-    .domain(res)
-    .range(colors)
-
-
-  
-
-  
-  // Draw the line
-  svg.selectAll(".line")
-      .data(sumstat)
-      .enter()
-      .append("path")
-        .attr("fill", "none")
-        .attr("stroke", function(d){ return color(d.key) })
-        .attr("stroke-width", 1.5)
-        .attr("d", function(d){
-          return d3.line()
-            .x(function(d) { return x(d.year); })
-            .y(function(d) { return y(+d.gdp); })
-            (d.values)
-        })
-        svg
-      .selectAll("myLegend")
-      .data(sumstat)
-      .enter()
-        .append('g')
-        .append("text")
-          .attr('x', function(d,i){ return 30 + i*60})
-          .attr('y', 30)
-          .text(function(d) { return d.key; })
-          .style("fill", function(d){ return myColor(d.key) })
-          .style("font-size", 15)
-        .on("click", function(d){
-          // is the element currently visible ?
-          currentOpacity = d3.selectAll("." + d.key).style("opacity")
-          // Change the opacity: from 0 to 1 or from 1 to 0
-          d3.selectAll("." + d.key).transition().style("opacity", currentOpacity == 1 ? 0:1)
-
-        })
-        
-
-    
-
-})
-        var legend_x = 1350
-        var legend_text = legend_x + 20
-        var colors = ["#000000", "#006400", "#ff0000", "#ffd700", "#00ff00", "#4169e1", "#e9967a", "#00ffff", "#0000ff", "#ff1493"]
-        var countries = ["United States", "China", "European Union", "Japan", "India", "Brazil", "Canada", "Russia", "South Korea", "Australia"]
-        var c0 = colors[0]
-        svg.append("circle").attr("cx",legend_x).attr("cy",130).attr("r", 6).style("fill", colors[9]) //7 us
-        svg.append("text").attr("x", legend_text).attr("y", 130).text(countries[0]).style("font-size", "15px").attr("alignment-baseline","middle")
-        svg.append("circle").attr("cx",legend_x).attr("cy",160).attr("r", 6).style("fill", colors[3]) //3 china
-        svg.append("text").attr("x", legend_text).attr("y", 160).text(countries[1]).style("font-size", "15px").attr("alignment-baseline","middle")
-        svg.append("circle").attr("cx",legend_x).attr("cy",190).attr("r", 6).style("fill", colors[4]) //4 eu
-        svg.append("text").attr("x", legend_text).attr("y", 190).text(countries[2]).style("font-size", "15px").attr("alignment-baseline","middle")
-        svg.append("circle").attr("cx",legend_x).attr("cy",220).attr("r", 6).style("fill", colors[6]) //6 japan
-        svg.append("text").attr("x", legend_text).attr("y", 220).text(countries[3]).style("font-size", "15px").attr("alignment-baseline","middle")
-        svg.append("circle").attr("cx",legend_x).attr("cy",250).attr("r", 6).style("fill", colors[5]) //5 india
-        svg.append("text").attr("x", legend_text).attr("y", 250).text(countries[4]).style("font-size", "15px").attr("alignment-baseline","middle")
-        svg.append("circle").attr("cx",legend_x).attr("cy",280).attr("r", 6).style("fill", colors[2]) //2 brazil
-        svg.append("text").attr("x", legend_text).attr("y", 280).text(countries[5]).style("font-size", "15px").attr("alignment-baseline","middle")
-        svg.append("circle").attr("cx",legend_x).attr("cy",310).attr("r", 6).style("fill", colors[7]) //3 canada
-        svg.append("text").attr("x", legend_text).attr("y", 310).text(countries[6]).style("font-size", "15px").attr("alignment-baseline","middle")
-        svg.append("circle").attr("cx",legend_x).attr("cy",340).attr("r", 6).style("fill", colors[8]) //9 russia
-        svg.append("text").attr("x", legend_text).attr("y", 340).text(countries[7]).style("font-size", "15px").attr("alignment-baseline","middle") //7,8
-        svg.append("circle").attr("cx",legend_x).attr("cy",370).attr("r", 6).style("fill", colors[1]) //8 korea
-        svg.append("text").attr("x", legend_text).attr("y", 370).text(countries[8]).style("font-size", "15px").attr("alignment-baseline","middle")
-        svg.append("circle").attr("cx",legend_x).attr("cy",400).attr("r", 6).style("fill", colors[0]) //1 australia
-        svg.append("text").attr("x", legend_text).attr("y", 400).text(countries[9]).style("font-size", "15px").attr("alignment-baseline","middle")
-
-        const annotations = [
-  {
-    note: {
-      label: "EU started to stagnate and fluctuate around 2008",
-      title: "European Union",
-      align: "right"
-    },
-    x: 1023,
-    y: 230,
-    dy: -50,
-    dx: -50
-  },
-  {
-    note: {
-      label: "China started to massively increase in GDP in the mid 90's",
-      title: "China",
-      align: "left"
-    },
-    x: 780,
-    y: 760,
-    dy: -20,
-    dx: -20
-  },
-  {
-    note: {
-      label: "Japan stagnated around the mid 90's due to its limited resources & shrinking population",
-      title: "Japan",
-      align: "right"
-    },
-    x: 747,
-    y: 600,
-    dy: -120,
-    dx: -100
-  }
-]
-const makeAnnotations = d3.annotation()
-  .annotations(annotations)
-svg.append("g")
-  .call(makeAnnotations)
-        </script>
+      // set the dimensions and margins of the graph
+      var margin = {top: 10, right: 100, bottom: 30, left: 100},
+          width = 1700 - margin.left - margin.right,
+          height = 850 - margin.top - margin.bottom;
+      
+      // append the svg object to the body of the page
+      var svg = d3.select("#graph_div")
+        .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+      
+      //Read the data
+      d3.csv("https://raw.githubusercontent.com/asaifuddin18/asaifuddin18.github.io/main/data.csv", function(data) {
+      
+          // List of groups (here I have one group per column)
+          var allGroup = ["United States", "China", "European Union", "Japan", "India", "Brazil", "Canada", "Russia", "South Korea", "Australia"]
+      
+          // Reformat the data: we need an array of arrays of {x, y} tuples
+          var dataReady = allGroup.map( function(grpName) { // .map allows to do something for each element of the list
+            return {
+              name: grpName,
+              values: data.map(function(d) {
+                return {time: d.year, value: +d[grpName]};
+              })
+            };
+          });
+          // I strongly advise to have a look to dataReady with
+          // console.log(dataReady)
+      
+          // A color scale: one color for each group
+          var myColor = d3.scaleOrdinal()
+            .domain(allGroup)
+            .range(d3.schemeSet2);
+      
+          // Add X axis --> it is a date format
+          var x = d3.scaleLinear()
+            .domain([1961,2021])
+            .range([ 0, width ]);
+          svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+      
+          // Add Y axis
+          var y = d3.scaleLinear()
+            .domain( [0,25000000000000])
+            .range([ height, 0 ]);
+          svg.append("g")
+            .call(d3.axisLeft(y));
+      
+          // Add the lines
+          var line = d3.line()
+            .x(function(d) { return x(+d.time) })
+            .y(function(d) { return y(+d.value) })
+          svg.selectAll("myLines")
+            .data(dataReady)
+            .enter()
+            .append("path")
+              .attr("class", function(d){ return d.name })
+              .attr("d", function(d){ return line(d.values) } )
+              .attr("stroke", function(d){ return myColor(d.name) })
+              .style("stroke-width", 4)
+              .style("fill", "none")
+      
+      
+          // Add a legend (interactive)
+          svg
+            .selectAll("myLegend")
+            .data(dataReady)
+            .enter()
+              .append('g')
+              .append("text")
+                .attr('x', function(d,i){ return 30 + i*120})
+                .attr('y', 30)
+                .text(function(d) { return d.name.replaceAll('_',' '); })
+                .style("fill", function(d){ return myColor(d.name) })
+                .style("font-size", 15)
+              .on("click", function(d){
+                // is the element currently visible ?
+                currentOpacity = d3.selectAll("." + d.name).style("opacity")
+                // Change the opacity: from 0 to 1 or from 1 to 0
+                d3.selectAll("." + d.name).transition().style("opacity", currentOpacity == 1 ? 0:1)
+      
+              })
+      })
+      
+      
+      </script>
 </html>
