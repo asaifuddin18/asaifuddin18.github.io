@@ -13,6 +13,8 @@
             font-size: 10px;
             transition-duration: .5s;
             width: 100px;
+            margin-left: 5px;
+            margin-right: 5px;
         }
         /*https://stackoverflow.com/questions/52050828/show-tooltip-on-the-d3-map*/
         div.tooltip {   
@@ -50,6 +52,7 @@
     <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <script>
+      //SOURCE: https://d3-graph-gallery.com/connectedscatter.html
         // set the dimensions and margins of the graph
         var margin = {top: 10, right: 100, bottom: 30, left: 60},
             width = 1700 - margin.left - margin.right,

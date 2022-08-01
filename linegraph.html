@@ -5,24 +5,18 @@
             .button {
             background-color: #e7e7e7;
             border: none;
-            color: black;
             padding: 10px 10px;
             text-align: center;
-            text-decoration: none;
-            display: inline-block;
             font-size: 10px;
             transition-duration: .5s;
             width: 100px;
+            margin-left: 5px;
+            margin-right: 5px;
         }
-        /*https://stackoverflow.com/questions/52050828/show-tooltip-on-the-d3-map*/
         div.tooltip {   
     position: absolute;         
     text-align: center;                      
-    font: 12px sans-serif;      
-    background: lightsteelblue; 
-    border: 0px;        
-    border-radius: 8px;         
-    pointer-events: none;           
+    font: 12px sans-serif;            
 }
         .button:hover {
             background-color: #000000;
@@ -43,6 +37,7 @@
         <button class="button" onclick = "window.location.href='eu_gdp.html'">EU GDP Growth</button>
         <button class="button" onclick = "window.location.href='japan_gdp.html'">Japan GDP Growth</button>
     </div>
+    <div class="center_div">Note: zoom with scroll wheel, pan with left-click, and hide countries by clicking their name on the right</div>
         <div id="graph_div" class="center_div">
         </div>
     </body>
@@ -50,7 +45,7 @@
     <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <script>
-
+      //SOURCE https://d3-graph-gallery.com/connectedscatter.html
       // set the dimensions and margins of the graph
       var margin = {top: 50, right: 10, bottom: 30, left: 150},
           width = 1700 - margin.left - margin.right,
