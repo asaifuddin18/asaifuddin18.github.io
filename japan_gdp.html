@@ -36,12 +36,12 @@
     </head>
     <body>
         <div class="center_div">
-            <button class="button" onclick = "window.location.href='index.html'">First Page</button>
-            <button class="button" onclick = "window.location.href='linegraph.html'">Second Page</button>
-            <button class="button" onclick = "window.location.href='gdp_growth.html'">US GDP Growth</button>
-            <button class="button" onclick = "window.location.href='china_gdp.html'">China GDP Growth</button>
-            <button class="button" onclick = "window.location.href='eu_gdp.html'">EU GDP Growth</button>
-            <button class="button" onclick = "window.location.href='japan_gdp.html'">Japan GDP Growth</button>
+          <button class="button" onclick = "window.location.href='index.html'">Overview</button>
+          <button class="button" onclick = "window.location.href='linegraph.html'">Top 10 Historical GDP</button>
+          <button class="button" onclick = "window.location.href='gdp_growth.html'">US GDP Growth</button>
+          <button class="button" onclick = "window.location.href='china_gdp.html'">China GDP Growth</button>
+          <button class="button" onclick = "window.location.href='eu_gdp.html'">EU GDP Growth</button>
+          <button class="button" onclick = "window.location.href='japan_gdp.html'">Japan GDP Growth</button>
         </div>
         <div id="graph_div" class="center_div">
         </div>
@@ -150,7 +150,7 @@
       }
       var mousemove = function(d) {
         Tooltip
-          .html("GDP Change: " + Math.round(d.value*100)/100 + "%")
+          .html("Year: " + d.date +  "<br>GDP Change: " + Math.round(d.value*100)/100 + "%")
           .style("left", (d3.mouse(this)[0]+185) + "px")
           .style("top", (d3.mouse(this)[1]+60) + "px")
       }
@@ -236,6 +236,17 @@
     y: 755,
     dy: -10,
     dx: -80
+  },
+  {
+    note: {
+      label: "Japan GDP growth has shrunk over the years, mainly attributed to a decreasing and ageing population, limited economy and resources",
+      title: "Summary",
+      align: "right"
+    },
+    x: 1540,
+    y: 477,
+    dy: -50,
+    dx: -50
   }
 ]
 const makeAnnotations = d3.annotation()

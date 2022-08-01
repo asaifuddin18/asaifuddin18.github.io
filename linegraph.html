@@ -36,8 +36,8 @@
     </head>
     <body>
       <div class="center_div">
-        <button class="button" onclick = "window.location.href='index.html'">First Page</button>
-        <button class="button" onclick = "window.location.href='linegraph.html'">Second Page</button>
+        <button class="button" onclick = "window.location.href='index.html'">Overview</button>
+        <button class="button" onclick = "window.location.href='linegraph.html'">Top 10 Historical GDP</button>
         <button class="button" onclick = "window.location.href='gdp_growth.html'">US GDP Growth</button>
         <button class="button" onclick = "window.location.href='china_gdp.html'">China GDP Growth</button>
         <button class="button" onclick = "window.location.href='eu_gdp.html'">EU GDP Growth</button>
@@ -52,7 +52,7 @@
     <script>
 
       // set the dimensions and margins of the graph
-      var margin = {top: 10, right: 100, bottom: 30, left: 100},
+      var margin = {top: 50, right: 10, bottom: 30, left: 150},
           width = 1700 - margin.left - margin.right,
           height = 850 - margin.top - margin.bottom;
       
@@ -69,7 +69,7 @@
       d3.csv("https://raw.githubusercontent.com/asaifuddin18/asaifuddin18.github.io/main/data.csv", function(data) {
       
           // List of groups (here I have one group per column)
-          var allGroup = ["United States", "China", "European Union", "Japan", "India", "Brazil", "Canada", "Russia", "South Korea", "Australia"]
+          var allGroup = ["United_States", "China", "European_Union", "Japan", "India", "Brazil", "Canada", "Russia", "South Korea", "Australia"]
       
           // Reformat the data: we need an array of arrays of {x, y} tuples
           var dataReady = allGroup.map( function(grpName) { // .map allows to do something for each element of the list
@@ -92,22 +92,23 @@
           var x = d3.scaleLinear()
             .domain([1961,2021])
             .range([ 0, width ]);
-          svg.append("g")
-            .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x));
+            var xAxis = svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
       
           // Add Y axis
           var y = d3.scaleLinear()
             .domain( [0,25000000000000])
             .range([ height, 0 ]);
-          svg.append("g")
-            .call(d3.axisLeft(y));
-      
+            var yAxis = svg.append("g")
+    .call(d3.axisLeft(y));
+      var linegraph = svg.append('g')
+      .attr("clip-path", "url(#clip)")
           // Add the lines
           var line = d3.line()
             .x(function(d) { return x(+d.time) })
             .y(function(d) { return y(+d.value) })
-          svg.selectAll("myLines")
+          linegraph.selectAll("myLines")
             .data(dataReady)
             .enter()
             .append("path")
@@ -119,25 +120,141 @@
       
       
           // Add a legend (interactive)
-          svg
+          var legendsvg = d3.select("#graph_div")
+        .append("svg")
+          .attr("width", 200)
+          .attr("height", height+margin.top+margin.bottom)
+          .append("g")
+          legendsvg
             .selectAll("myLegend")
             .data(dataReady)
             .enter()
               .append('g')
               .append("text")
-                .attr('x', function(d,i){ return 30 + i*120})
-                .attr('y', 30)
-                .text(function(d) { return d.name.replaceAll('_',' '); })
+                .attr('x', 30)
+                .attr('y', function(d,i){ return 30 + i*40})
+                .text(function(d) { return d.name.replaceAll('_',' ')})
                 .style("fill", function(d){ return myColor(d.name) })
-                .style("font-size", 15)
+                .style("font-size", 20)
               .on("click", function(d){
                 // is the element currently visible ?
                 currentOpacity = d3.selectAll("." + d.name).style("opacity")
+                color = d3.select(this).style("fill")
+                if (color != d3.color("black")) {
+                  d3.select(this).style("fill", d3.color("black"))
+                } else {
+                  color = d3.select(this).style("fill",myColor(d.name))
+                }
                 // Change the opacity: from 0 to 1 or from 1 to 0
                 d3.selectAll("." + d.name).transition().style("opacity", currentOpacity == 1 ? 0:1)
       
               })
+              legendsvg.append("text")
+    .attr("text-anchor", "middle")
+    .attr("x", 30)
+    .attr("y", height+margin.top)
+    .attr("font-size", "25px")
+    .text("Year");
+
+
+              var zoom = d3.zoom()
+      .scaleExtent([1, 10])  // This control how much you can unzoom (x0.5) and zoom (x20)
+      .extent([[0, 0], [width, height]])
+      .translateExtent([[0, 0], [width, height]])
+      .on("zoom", updateChart);
+
+svg.append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      .style("fill", "none")
+      .style("pointer-events", "all")
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+      .call(zoom);
+
+function updateChart() {
+
+    // recover the new scale
+    var newX = d3.event.transform.rescaleX(x);
+    var newY = d3.event.transform.rescaleY(y);
+    d3.selectAll("g.annotations").style("visibility", "hidden")
+
+    // update axes with these new boundaries
+    xAxis.call(d3.axisBottom(newX))
+    yAxis.call(d3.axisLeft(newY))
+    var newLine = d3.line()
+            .x(function(d) { return newX(+d.time) })
+            .y(function(d) { return newY(+d.value) })
+    linegraph.selectAll("path")
+              .attr("d", function(d){ return newLine(d.values) } )
+
+    // update circle position
+  }
+
+  const annotations = [
+  {
+    note: {
+      label: "EU started to stagnate and fluctuate around 2008",
+      title: "European Union",
+      align: "right"
+    },
+    x: 1207,
+    y: 265,
+    dy: -50,
+    dx: -50
+  },
+  {
+    note: {
+      label: "China started to massively increase in GDP in the mid 90's",
+      title: "China",
+      align: "right"
+    },
+    x: 955,
+    y: 737,
+    dy: -10,
+    dx: -10
+  },
+  {
+    note: {
+      label: "Coming out WWII, US became and remained the economic and military superpower of the world",
+      title: "USA",
+      align: "left"
+    },
+    x: 100,
+    y: 745,
+    dy: -10,
+    dx: -10
+  },
+  {
+    note: {
+      label: "Japan stagnated around the mid 90's due to its limited resources & shrinking population",
+      title: "Japan",
+      align: "right"
+    },
+    x: 873,
+    y: 598,
+    dy: -120,
+    dx: -100
+  }
+]
+const makeAnnotations = d3.annotation()
+  .annotations(annotations)
+svg.append("g")
+  .call(makeAnnotations)
       })
+      svg.append("text")
+    .attr("text-anchor", "end")
+    .attr("transform", "rotate(-90)")
+    .attr("y", -margin.left+20)
+    .attr("x", -margin.top)
+    .attr("font-size", "25px")
+    .text("GDP (USD)")
+      //title
+    svg.append("text")
+    .attr("text-anchor", "middle")
+    .attr("y", margin.top)
+    .attr("x", (width/2))
+    .attr("font-size", "25px")
+    .text("Top 10 Entity GDP Growth 1961-2021 (%)")
       
       
       </script>
